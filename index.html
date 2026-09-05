@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SURGOMNI: TOWARDS ALL-IN-ONE SURGICAL RESTORATION FOR COMPLEX MULTI-DEGRADATION</title>
   <link rel="icon" href="fig/icon.png" type="image/png">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -256,8 +256,6 @@
 
   <script>
     (function () {
-      var placeholder = 'figure/sub.png';
-
       document.querySelectorAll('.link-btn.is-disabled').forEach(function (link) {
         link.addEventListener('click', function (event) { event.preventDefault(); });
       });
@@ -288,18 +286,11 @@
               '<div class="comparison-handle"></div>' +
             '</div><span class="media-status">GT left · degraded right</span></div>';
         }
-        var before = '<img src="' + placeholder + '" alt="' + label + ' clean video placeholder" class="comparison-before">';
-        var after = '<img src="' + placeholder + '" alt="' + label + ' degraded video placeholder">';
-        var status = 'Video pending';
         return '<div class="level-comparison' + (level > 2 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
           '<div class="level-label">Level ' + level + '</div>' +
-          '<div class="comparison-media"' + (isHaze ? ' data-video-pair="haze-level-' + level + '"' : '') + '>' +
-            before +
-            (isHaze ? '<span class="comparison-tag comparison-tag--before">GT</span>' : '') +
-            '<div class="comparison-after">' + after + (isHaze ? '<span class="comparison-tag comparison-tag--after">Degraded</span>' : '') + '</div>' +
-            '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded ' + label + ' at level ' + level + '">' +
-            '<div class="comparison-handle"></div>' +
-          '</div><span class="media-status">' + status + '</span></div>';
+          '<div class="comparison-media comparison-media--missing" aria-label="' + label + ' Level ' + level + ' source video not provided">' +
+            '<span class="missing-video-mark" aria-hidden="true">▶</span><strong>Source video not provided</strong>' +
+          '</div><span class="media-status">Waiting for clean and degraded MP4 files</span></div>';
       }
 
       function bindVideoPairs(root) {
@@ -325,6 +316,7 @@
 
       function renderSynPanel(panel, label) {
         var labels = panel.dataset.synConfigs.split('|');
+        panel.classList.remove('show-all-levels');
         panel.innerHTML = '<div class="syn-selector"><label>Configuration <select aria-label="Choose a degradation configuration">' +
           labels.map(function (item) { return '<option' + (item === label ? ' selected' : '') + '>' + item + '</option>'; }).join('') +
           '</select></label></div>' +
@@ -359,7 +351,7 @@
 
       document.querySelectorAll('[data-bench-configs]').forEach(function (panel) {
         panel.innerHTML = panel.dataset.benchConfigs.split('|').map(function (label) {
-          return '<article class="bench-video-card"><div class="bench-media"><img src="' + placeholder + '" alt="' + label + ' test video placeholder"><span><i class="fas fa-play"></i> video pending</span></div><strong>' + label + '</strong></article>';
+          return '<article class="bench-video-card"><div class="bench-media bench-media--missing" aria-label="' + label + ' source video not provided"><span class="missing-video-mark" aria-hidden="true">▶</span><span>Source video not provided</span></div><strong>' + label + '</strong></article>';
         }).join('');
       });
 

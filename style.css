@@ -147,6 +147,9 @@ p { margin: 0 0 1rem; }
 .level-label { margin-bottom: .25rem; color: #587289; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .comparison-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 11px; background: #edf2f7; }
 .comparison-media img, .comparison-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.comparison-media--missing { display: grid; place-content: center; justify-items: center; gap: .45rem; border: 1px dashed #cbd6e1; background: linear-gradient(145deg, #f7f9fb, #edf2f6); color: #6d8195; text-align: center; }
+.comparison-media--missing strong { padding: 0 .7rem; font-size: .72rem; }
+.missing-video-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #dbe4ec; color: #6d8195; font-size: .7rem; }
 .comparison-after { position: absolute; inset: 0; width: var(--slider-pos); overflow: hidden; }
 .comparison-after img, .comparison-after video { width: var(--media-width, 100%); max-width: none; }
 .comparison-media input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
@@ -173,6 +176,9 @@ p { margin: 0 0 1rem; }
 .bench-media { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: 14px; background: #eef3f7; }
 .bench-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); }
 .bench-media span { position: absolute; inset: auto .45rem .45rem; padding: .23rem .35rem; border-radius: 7px; background: rgba(32,49,72,.7); color: white; font-size: .65rem; }
+.bench-media--missing { display: grid; place-content: center; justify-items: center; gap: .4rem; border-style: dashed; background: linear-gradient(145deg, #f7f9fb, #edf2f6); }
+.bench-media--missing span { position: static; inset: auto; background: transparent; color: #6d8195; }
+.bench-media--missing .missing-video-mark { background: #dbe4ec; }
 .bench-video-card > strong { display: block; margin-top: .5rem; font-size: .82rem; }
 
 .experiment-block { display: grid; grid-template-columns: auto minmax(220px, .75fr) minmax(0, 1.6fr); gap: 1.5rem; align-items: start; margin: 2rem 0; padding: 1.5rem; border: 1px solid var(--line); border-radius: 22px; }
