@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SURGOMNI: TOWARDS ALL-IN-ONE SURGICAL RESTORATION FOR COMPLEX MULTI-DEGRADATION</title>
+  <link rel="icon" href="fig/icon.png" type="image/png">
+  <link rel="stylesheet" href="style.css?v=4">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- Title block intentionally preserved for later author-side editing. -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-title-row">
+        <span class="hero-logo hero-logo--surgomni" aria-hidden="true"><span></span></span>
+        <h1>SurgOmni</h1>
+      </div>
+      <p class="hero-subtitle">Towards All-in-One Surgical Restoration for Complex Multi-Degradation</p>
+      <p class="hero-venues">Anonymous ICLR 2027 Submission</p>
+      <div class="links">
+        <a href="#" class="link-btn is-disabled" aria-disabled="true"><i class="fas fa-file-alt"></i> Paper</a>
+        <a href="#" class="link-btn is-disabled" aria-disabled="true"><i class="fab fa-github"></i> Code</a>
+        <a href="#" class="link-btn is-disabled" aria-disabled="true"><span class="service-icon service-icon--hf">HF</span> Hugging Face</a>
+        <a href="#" class="link-btn is-disabled" aria-disabled="true"><i class="fab fa-google-drive"></i> Google Drive</a>
+        <a href="#" class="link-btn is-disabled" aria-disabled="true"><span class="service-icon service-icon--baidu">du</span> Baidu Netdisk</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Project page navigation">
+    <a href="#abstract">Abstract</a>
+    <a href="#dataset">Datasets</a>
+    <a href="#experiments">Experiments</a>
+    <a href="#discussion">Discussion</a>
+    <a href="#conclusion">Conclusion</a>
+  </nav>
+
+  <main>
+    <!-- Abstract intentionally preserved. -->
+    <section id="abstract" class="section scroll-reveal revealed">
+      <h2>Abstract</h2>
+      <p class="tldr"><strong>TL;DR:</strong> SurgOmni is a unified benchmark for all-in-one surgical image restoration, featuring 44,000 paired training frames and 10,000 real-world evaluation frames with complex multi-degradations. Evaluations reveal limitations of generic IQA metrics and provide practical guidance for surgical image restoration. </p>
+      <p>Laparoscopic surgery relies on clear visualization for accurate decision-making, yet surgical videos are often degraded by smoke, fog, fluid, uneven illumination, and motion blur—often co-occurring in real procedures. To tackle the lack of paired supervision and the limitations of synthetic or pseudo-paired datasets, we introduce <strong>SurgOmni</strong>, a unified benchmark for all-in-one surgical image restoration under complex multi-degradation settings. It comprises <strong>OmniSyn</strong>, a degradation-aware paired training set with 44,000 high-resolution frames across 5 degradation types and 9 multi-degradation combinations, and <strong>OmniBench</strong>, a real-world evaluation benchmark with 10,000 frames spanning 6 surgical types, 10 organs, and 27 scenes with naturally co-occurring degradations. Extensive evaluations and surgeon assessments reveal inconsistencies among generic IQA metrics, validate OmniSyn’s effectiveness, and provide practical guidance for algorithm development and clinical dataset design.</p>
+      <div class="teaser">
+        <img src="figure/Surgomni_p1.png" alt="SurgOmni Teaser" class="teaser-img" style="width:100%;max-width:1300px;">
+      </div>
+    </section>
+
+    <section id="dataset" class="section section--wide scroll-reveal">
+      <div class="section-kicker">Paired training + authentic evaluation</div>
+      <h2>SurgOmni Datasets</h2>
+      <p class="section-lead">SurgOmni separates controlled, exactly paired supervision from authentic real-world evaluation. Both components share the same five-factor taxonomy: Blur, Haze, non-uniform illumination (NUI), Smoke, and Splash.</p>
+    </section>
+
+    <section id="omnisyn" class="section section--wide dataset-detail dataset-detail--syn scroll-reveal" aria-labelledby="omnisyn-dialog-title">
+      <div class="dialog-shell">
+        <header class="dialog-header dialog-header--pink">
+          <span class="section-kicker">Dataset 01 · paired supervision</span>
+          <h2 id="omnisyn-dialog-title">OmniSyn</h2>
+          <p>Formation-aware synthesis with exact clean references and temporally coherent degradation states.</p>
+        </header>
+        <div class="dialog-body">
+          <figure class="paper-figure">
+            <img src="figure/pdf_p5-000.png" alt="OmniSyn degradation synthesis pipeline">
+            <figcaption>OmniSyn pipeline: scene-, lens-, exposure-, and illumination-space mechanisms create five surgical degradations while preserving clip-level temporal continuity.</figcaption>
+          </figure>
+
+          <h3>Comparison with existing surgical restoration datasets</h3>
+          <div class="table-scroll">
+            <table class="data-table comparison-table">
+              <thead><tr><th>Dataset</th><th>Mode</th><th>Resolution</th><th>Smoke</th><th>Haze</th><th>Splash</th><th>Blur</th><th>NUI</th><th>Comp.</th><th>Scale</th><th>Paradigm / anatomy</th></tr></thead>
+              <tbody>
+                <tr><td>PSv2rs</td><td>Image</td><td>256×256</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>0</td><td>54,420</td><td>Frame-wise smoke synthesis</td></tr>
+                <tr><td>MARS-GAN</td><td>Image</td><td>256×256</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>0</td><td>18,000</td><td>Frame-wise smoke synthesis</td></tr>
+                <tr><td>PFAN</td><td>Image</td><td>480×480</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>0</td><td>660</td><td>Frame-wise smoke synthesis</td></tr>
+                <tr><td>STSVD</td><td>Video</td><td>1080×720</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>0</td><td>12,000</td><td>Temporal smoke synthesis</td></tr>
+                <tr><td>ICIP LVQ</td><td>Video</td><td>512×288</td><td>✓</td><td>×</td><td>×</td><td>✓</td><td>✓</td><td>5</td><td>20,000</td><td>Frame-wise multi-degradation synthesis</td></tr>
+                <tr class="best-row"><td><strong>OmniSyn</strong></td><td>Video</td><td>1080×720</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>9</td><td>44,000</td><td>Temporal multi-degradation synthesis</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="explorer-heading">
+            <div><span class="section-kicker">Video area</span><h3>Clean ↔ degraded comparison by severity</h3></div>
+            <p>Choose one configuration at a time. The first two levels stay compact; expand the row to inspect Levels 3–4.</p>
+          </div>
+          <div class="category-tabs" data-tabs-for="omnisyn-panels" role="tablist" aria-label="OmniSyn composition">
+            <button type="button" class="category-tab active" data-tab-target="syn-single">Single <small>5 types</small></button>
+            <button type="button" class="category-tab" data-tab-target="syn-dual">Dual <small>7 types</small></button>
+            <button type="button" class="category-tab" data-tab-target="syn-triple">Triple <small>2 types</small></button>
+          </div>
+          <div id="omnisyn-panels" class="category-panels">
+            <div id="syn-single" class="category-panel active" data-syn-configs="Blur|Haze|NUI|Smoke|Splash"></div>
+            <div id="syn-dual" class="category-panel" data-syn-configs="Blur+Haze|Blur+Smoke|Haze+NUI|Smoke+Haze|Smoke+NUI|Splash+Haze|Splash+Smoke"></div>
+            <div id="syn-triple" class="category-panel" data-syn-configs="Smoke+Haze+NUI|Smoke+Haze+Splash"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="omnibench" class="section section--wide dataset-detail dataset-detail--bench scroll-reveal" aria-labelledby="omnibench-dialog-title">
+      <div class="dialog-shell">
+        <header class="dialog-header dialog-header--blue">
+          <span class="section-kicker">Dataset 02 · authentic evaluation</span>
+          <h2 id="omnibench-dialog-title">OmniBench</h2>
+          <p>Real surgical clips with naturally co-occurring, multi-label degradations and no artificial clean target.</p>
+        </header>
+        <div class="dialog-body">
+          <h3>Comparison with existing surgical restoration datasets</h3>
+          <div class="table-scroll">
+            <table class="data-table comparison-table">
+              <thead><tr><th>Dataset</th><th>Mode</th><th>Resolution</th><th>Smoke</th><th>Haze</th><th>Splash</th><th>Blur</th><th>NUI</th><th>Comp.</th><th>Scale</th><th>Paradigm / anatomy</th></tr></thead>
+              <tbody>
+                <tr><td>Vivo</td><td>Image</td><td>700×350</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td>961</td><td>Prostate</td></tr>
+                <tr><td>SurgClean</td><td>Image</td><td>1280×720</td><td>✓</td><td>✓</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>3,113</td><td>Gall, Bile, Liver, Pan, Spl; Lung, Med, Eso</td></tr>
+                <tr><td>LSVD</td><td>Video</td><td>1080×1920</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td>2,106</td><td>N/R</td></tr>
+                <tr><td>STSVD-R</td><td>Video</td><td>1080×720</td><td>✓</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td>2,400</td><td>Gallbladder†</td></tr>
+                <tr class="best-row"><td><strong>OmniBench</strong></td><td>Video</td><td>1080×720</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>10,000</td><td>Gall, Bile, Liver; Cec, AC, TC, DC, Sig, Rect, Meso</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="explorer-heading">
+            <div><span class="section-kicker">Video area</span><h3>Authentic test clips by composition</h3></div>
+            <p>Each composition is presented as one consistent five-clip row.</p>
+          </div>
+          <div class="category-tabs" data-tabs-for="omnibench-panels" role="tablist" aria-label="OmniBench composition">
+            <button type="button" class="category-tab active" data-tab-target="bench-single">Single <small>5 clips</small></button>
+            <button type="button" class="category-tab" data-tab-target="bench-dual">Dual <small>5 clips</small></button>
+            <button type="button" class="category-tab" data-tab-target="bench-triple">Triple <small>5 clips</small></button>
+          </div>
+          <div id="omnibench-panels" class="category-panels">
+            <div id="bench-single" class="category-panel active bench-video-layout">
+              <div class="bench-video-row bench-video-row--five" data-bench-configs="Blur|Haze|NUI|Smoke|Splash"></div>
+            </div>
+            <div id="bench-dual" class="category-panel bench-video-layout">
+              <div class="bench-video-row bench-video-row--five" data-bench-configs="Blur+Haze|Blur+Smoke|Haze+NUI|Smoke+Haze|Smoke+NUI"></div>
+            </div>
+            <div id="bench-triple" class="category-panel bench-video-layout">
+              <div class="bench-video-row bench-video-row--five" data-bench-configs="Smoke+Haze+NUI · 01|Smoke+Haze+Splash · 02|Smoke+Haze+NUI · 03|Smoke+Haze+Splash · 04|Smoke+Haze+NUI · 05"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experiments" class="section section--wide scroll-reveal">
+      <div class="section-kicker">17 restorers · paired + real + clinical tasks</div>
+      <h2>Experiments & Analysis</h2>
+      <p class="section-lead">The benchmark evaluates dataset quality, restoration fidelity, real-world perceptual quality, temporal behavior, downstream surgical perception, efficiency, and surgeon preference. These views intentionally remain separate because they favor different models.</p>
+
+      <article class="experiment-block experiment-block--green">
+        <div class="experiment-number">E1</div>
+        <div class="experiment-copy"><span class="section-kicker">Training dataset comparison</span><h3>OmniSyn transfers better under matched budgets</h3><p>Against pseudo-paired SurgClean at 2,488 pairs, OmniSyn wins 126 of 135 real-world NR-IQA comparisons. Against exactly paired LVQ at 10,000 pairs, OmniSyn wins all 135 comparisons. Exact correspondence matters, but surgical-specific synthesis remains essential beyond exact pairing.</p></div>
+        <div class="experiment-visual-stack">
+          <figure class="paper-figure experiment-figure"><img src="figure/dataset_comparison.png" alt="Matched-budget dataset comparison"><figcaption>Matched-budget training dataset comparison across restoration methods.</figcaption></figure>
+          <figure class="paper-figure experiment-figure"><img src="figure/surgeon_assessment.png" alt="Blinded surgeon assessment"><figcaption>Blinded surgeon assessment of clinical visibility, structural preservation, temporal consistency, and overall interpretability.</figcaption></figure>
+        </div>
+      </article>
+
+      <article class="experiment-block experiment-block--blue">
+        <div class="experiment-number">E2</div>
+        <div class="experiment-copy"><span class="section-kicker">Model benchmark</span><h3>No single restorer dominates every criterion</h3><p>SFHformer leads paired OmniSyn fidelity; OneRestore, BioIR, HOGformer, and UniRestore are stronger on real-domain perceptual metrics; DA-RCOT best preserves input-referenced motion on OmniBench; OneRestore is fastest and lowest-MAC; SFHformer has the fewest parameters.</p></div>
+        <h4 class="table-title">Restoration benchmark (paper Table 2, selected deployment-relevant columns)</h4>
+        <div class="table-scroll table-scroll--wide">
+          <table class="data-table benchmark-table">
+            <thead>
+              <tr><th rowspan="2">Model</th><th rowspan="2">Venue</th><th colspan="4">OmniSyn</th><th colspan="4">Gallbladder (real)</th><th colspan="4">Colon (real)</th><th colspan="2">Efficiency</th></tr>
+              <tr><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>tOF↓</th><th>TOPIQ↑</th><th>MUSIQ↑</th><th>Q-Align↑</th><th>tOF↓</th><th>TOPIQ↑</th><th>MUSIQ↑</th><th>Q-Align↑</th><th>tOF↓</th><th>Params↓</th><th>Latency↓</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>PromptIR</td><td>NeurIPS’23</td><td>26.066</td><td>0.855</td><td>0.232</td><td>1.548</td><td>0.326</td><td>46.092</td><td>3.421</td><td>0.166</td><td>0.405</td><td>53.894</td><td>3.749</td><td>0.231</td><td>35.6 M</td><td>0.85 s</td></tr>
+              <tr class="best-row"><td>SFHformer</td><td>ECCV’24</td><td><strong>27.556</strong></td><td><strong>0.871</strong></td><td><strong>0.202</strong></td><td><strong>1.338</strong></td><td>0.329</td><td>46.301</td><td>3.466</td><td>0.157</td><td>0.407</td><td>54.494</td><td>3.792</td><td>0.263</td><td><strong>3.0 M</strong></td><td>0.17 s</td></tr>
+              <tr><td>OneRestore</td><td>ECCV’24</td><td>25.557</td><td>0.815</td><td>0.254</td><td>1.449</td><td><strong>0.356</strong></td><td>41.557</td><td>3.300</td><td>0.865</td><td>0.413</td><td>44.644</td><td>3.617</td><td>1.125</td><td>18.1 M</td><td><strong>0.09 s</strong></td></tr>
+              <tr><td>MambaIR</td><td>ECCV’24</td><td>26.170</td><td>0.849</td><td>0.224</td><td>1.533</td><td>0.324</td><td>46.078</td><td>3.415</td><td>0.165</td><td>0.401</td><td>53.530</td><td>3.732</td><td>0.301</td><td>15.8 M</td><td>7.65 s</td></tr>
+              <tr><td>BioIR</td><td>NeurIPS’25</td><td>27.308</td><td>0.869</td><td>0.211</td><td>1.399</td><td>0.330</td><td><strong>46.731</strong></td><td>3.475</td><td>0.189</td><td>0.410</td><td><strong>55.443</strong></td><td><strong>3.814</strong></td><td>0.260</td><td>15.8 M</td><td>0.94 s</td></tr>
+              <tr><td>MoCE</td><td>CVPR’25</td><td>27.365</td><td>0.869</td><td>0.212</td><td>1.396</td><td>0.329</td><td>46.118</td><td>3.442</td><td>0.146</td><td>0.411</td><td>53.884</td><td>3.722</td><td>0.348</td><td>11.5 M</td><td>0.56 s</td></tr>
+              <tr><td>AdaIR</td><td>ICLR’25</td><td>26.821</td><td>0.860</td><td>0.222</td><td>1.504</td><td>0.326</td><td>46.229</td><td>3.441</td><td>0.153</td><td>0.404</td><td>54.007</td><td>3.784</td><td>0.263</td><td>28.8 M</td><td>1.09 s</td></tr>
+              <tr><td>DA-RCOT</td><td>TPAMI’25</td><td>24.984</td><td>0.834</td><td>0.250</td><td>1.684</td><td>0.322</td><td>45.384</td><td>3.424</td><td><strong>0.124</strong></td><td>0.407</td><td>52.905</td><td>3.764</td><td><strong>0.209</strong></td><td>52.3 M</td><td>1.88 s</td></tr>
+              <tr><td>MambaIRv2</td><td>CVPR’25</td><td>25.742</td><td>0.845</td><td>0.232</td><td>1.613</td><td>0.323</td><td>45.383</td><td>3.417</td><td>0.158</td><td>0.392</td><td>52.345</td><td>3.735</td><td>0.300</td><td>9.4 M</td><td>7.94 s</td></tr>
+              <tr><td>UniRestore</td><td>CVPR’25</td><td>25.387</td><td>0.838</td><td>0.255</td><td>1.724</td><td>0.338</td><td>46.246</td><td>3.346</td><td>0.774</td><td><strong>0.472</strong></td><td>53.776</td><td>3.645</td><td>1.179</td><td>1050.2 M‡</td><td>0.55 s</td></tr>
+              <tr><td>EndoIR</td><td>AAAI’26</td><td>24.548</td><td>0.805</td><td>0.363</td><td>2.032</td><td>0.217</td><td>31.402</td><td>2.789</td><td>1.177</td><td>0.232</td><td>32.789</td><td>2.749</td><td>1.788</td><td>24.8 M</td><td>0.10 s</td></tr>
+              <tr><td>RAR</td><td>CVPR’26</td><td>22.829</td><td>0.770</td><td>0.404</td><td>2.286</td><td>0.219</td><td>34.558</td><td>2.920</td><td>1.075</td><td>0.227</td><td>33.852</td><td>2.793</td><td>1.825</td><td>9411.3 M‡</td><td>8.20 s</td></tr>
+              <tr><td>HOGformer</td><td>AAAI’26</td><td>27.004</td><td>0.863</td><td>0.218</td><td>1.483</td><td>0.330</td><td>46.709</td><td><strong>3.485</strong></td><td>0.183</td><td>0.419</td><td>54.709</td><td>3.766</td><td>0.287</td><td>16.6 M</td><td>1.79 s</td></tr>
+              <tr><td>BaryIR</td><td>TPAMI’26</td><td>25.598</td><td>0.840</td><td>0.246</td><td>1.667</td><td>0.328</td><td>45.841</td><td>3.441</td><td>0.135</td><td>0.412</td><td>53.932</td><td>3.764</td><td>0.235</td><td>53.8 M</td><td>1.06 s</td></tr>
+              <tr><td>DATPRLIR</td><td>ICLR’26</td><td>26.215</td><td>0.839</td><td>0.272</td><td>1.791</td><td>0.327</td><td>46.585</td><td>3.456</td><td>0.147</td><td>0.420</td><td>55.017</td><td>3.740</td><td>0.257</td><td>42.6 M</td><td>1.19 s</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="paper-figure experiment-figure experiment-figure--full"><img src="figure/pdf_p7-003.png" alt="Qualitative restoration comparison on OmniBench"><figcaption>Representative OmniBench restoration results. Red boxes highlight challenging degraded regions and local structural differences.</figcaption></figure>
+      </article>
+
+      <article class="experiment-block experiment-block--pink">
+        <div class="experiment-number">E2.2</div>
+        <div class="experiment-copy"><span class="section-kicker">Downstream surgical perception</span><h3>Better-looking images are not always structurally safer</h3><p>Most evaluated restorers improve mean prediction consistency over degraded inputs. However, perceptual preference and downstream consistency diverge: a model can lead perceptual IQA while improving only part of the downstream measures.</p></div>
+        <figure class="paper-figure experiment-figure"><img src="figure/matched_source_downstream.png" alt="Downstream task comparison across restoration training sources"><figcaption>Scene segmentation, instrument segmentation, and monocular depth respond differently to training-source quality.</figcaption></figure>
+
+        <h4 class="table-title">Downstream consistency on the OmniSyn test set (paper Table 3)</h4>
+        <div class="table-scroll table-scroll--wide">
+          <table class="data-table downstream-table">
+            <thead><tr><th>Model</th><th>Scene Dice↑</th><th>Scene IoU↑</th><th>Scene BAcc↑</th><th>Instrument Dice↑</th><th>Instrument IoU↑</th><th>Instrument BAcc↑</th><th>Depth δ1↑</th><th>AbsRel↓</th><th>SqRel↓</th><th>RMSE↓</th></tr></thead>
+            <tbody>
+              <tr class="baseline-row"><td>Degraded input</td><td>0.902</td><td>0.868</td><td>0.927</td><td>0.937</td><td>0.883</td><td>0.946</td><td>0.957</td><td>0.065</td><td>0.017</td><td>0.148</td></tr>
+              <tr><td>PromptIR</td><td>0.928</td><td>0.890</td><td>0.964</td><td>0.944</td><td>0.905</td><td>0.969</td><td>0.982</td><td>0.042</td><td>0.011</td><td>0.121</td></tr>
+              <tr><td>SFHformer</td><td>0.923</td><td>0.887</td><td>0.965</td><td><strong>0.951</strong></td><td><strong>0.914</strong></td><td><strong>0.972</strong></td><td>0.972</td><td>0.046</td><td>0.014</td><td>0.130</td></tr>
+              <tr><td>OneRestore</td><td>0.912</td><td>0.868</td><td>0.952</td><td>0.941</td><td>0.900</td><td>0.968</td><td>0.970</td><td>0.050</td><td>0.015</td><td>0.141</td></tr>
+              <tr><td>MambaIR</td><td>0.927</td><td>0.889</td><td>0.963</td><td>0.945</td><td>0.905</td><td>0.970</td><td>0.976</td><td>0.046</td><td>0.013</td><td>0.130</td></tr>
+              <tr><td>BioIR</td><td>0.927</td><td><strong>0.891</strong></td><td>0.965</td><td>0.947</td><td>0.909</td><td>0.971</td><td>0.980</td><td>0.042</td><td>0.011</td><td>0.118</td></tr>
+              <tr><td>MoCE</td><td>0.924</td><td>0.887</td><td>0.964</td><td>0.948</td><td>0.910</td><td>0.971</td><td>0.977</td><td>0.043</td><td>0.012</td><td>0.122</td></tr>
+              <tr><td>AdaIR</td><td>0.927</td><td><strong>0.891</strong></td><td><strong>0.965</strong></td><td>0.946</td><td>0.908</td><td>0.970</td><td>0.981</td><td>0.041</td><td><strong>0.010</strong></td><td>0.117</td></tr>
+              <tr><td>DA-RCOT</td><td>0.927</td><td>0.888</td><td>0.961</td><td>0.939</td><td>0.898</td><td>0.967</td><td>0.980</td><td>0.043</td><td>0.011</td><td>0.124</td></tr>
+              <tr><td>MambaIRv2</td><td>0.923</td><td>0.883</td><td>0.961</td><td>0.942</td><td>0.902</td><td>0.968</td><td>0.977</td><td>0.047</td><td>0.013</td><td>0.133</td></tr>
+              <tr><td>UniRestore</td><td>0.905</td><td>0.860</td><td>0.947</td><td>0.943</td><td>0.903</td><td>0.970</td><td>0.964</td><td>0.052</td><td>0.017</td><td>0.146</td></tr>
+              <tr><td>EndoIR</td><td>0.912</td><td>0.866</td><td>0.952</td><td>0.926</td><td>0.877</td><td>0.961</td><td>0.966</td><td>0.057</td><td>0.018</td><td>0.163</td></tr>
+              <tr><td>RAR</td><td>0.908</td><td>0.860</td><td>0.948</td><td>0.920</td><td>0.867</td><td>0.959</td><td>0.967</td><td>0.055</td><td>0.017</td><td>0.159</td></tr>
+              <tr><td>HOGformer</td><td>0.926</td><td>0.889</td><td>0.963</td><td>0.946</td><td>0.908</td><td>0.970</td><td><strong>0.982</strong></td><td><strong>0.039</strong></td><td><strong>0.010</strong></td><td><strong>0.111</strong></td></tr>
+              <tr><td>BaryIR</td><td><strong>0.928</strong></td><td>0.890</td><td>0.964</td><td>0.942</td><td>0.901</td><td>0.968</td><td>0.980</td><td>0.042</td><td>0.011</td><td>0.121</td></tr>
+              <tr><td>DATPRLIR</td><td>0.919</td><td>0.877</td><td>0.959</td><td>0.936</td><td>0.893</td><td>0.965</td><td>0.977</td><td>0.044</td><td>0.012</td><td>0.125</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="experiment-block experiment-block--lavender">
+        <div class="experiment-number">E3</div>
+        <div class="experiment-copy"><span class="section-kicker">Training split study</span><h3>Composition should follow deployment conditions</h3><p><strong>single</strong> and <strong>mixed</strong> each use 160 clips, while <strong>scale</strong> combines both into 320 clips. Scale performs best overall on diverse Gallbladder and Colon domains. Under a fixed budget, mixed is advantageous on the narrower SurgClean domain because it concentrates smoke, haze, and splash exposure.</p></div>
+        <figure class="paper-figure experiment-figure"><img src="figure/training_split.png" alt="Training split comparison across real-world datasets"><figcaption>Training-split comparison across 17 methods: single (circles), mixed (triangles), and scale (diamonds).</figcaption></figure>
+      </article>
+    </section>
+
+    <section id="discussion" class="section section--wide scroll-reveal">
+      <div class="section-kicker">What the benchmark teaches us</div>
+      <h2>Discussion: Path Towards All-in-One Surgical Restoration</h2>
+      <div class="principle-grid">
+        <article><span>01</span><h3>Supervision is more than alignment</h3><p>Exact correspondence and surgical-specific degradation modeling both determine real-world transfer. Pixel alignment alone does not make synthetic sources equivalent.</p></article>
+        <article><span>02</span><h3>Quality is multi-objective</h3><p>Paired fidelity, perceptual IQA, temporal agreement, downstream consistency, and surgeon judgment capture different behavior and favor different methods.</p></article>
+        <article><span>03</span><h3>Strength depends on context</h3><p>No model simultaneously leads fidelity, perception, structural preservation, temporal consistency, and efficiency. The intended clinical use should determine the trade-off.</p></article>
+        <article><span>04</span><h3>Data should match deployment</h3><p>Broader coverage is safer for diverse settings, while a fixed budget focused on dominant target degradations can improve domain-specific performance.</p></article>
+      </div>
+      <div class="discussion-callout">Surgical restoration should be developed by jointly considering <strong>supervision quality</strong>, <strong>degradation modeling</strong>, <strong>evaluation objectives</strong>, <strong>model capability</strong>, and <strong>target-aware data allocation</strong>—not by optimizing a single benchmark score.</div>
+    </section>
+
+    <section id="conclusion" class="section scroll-reveal conclusion-section">
+      <div class="section-kicker">Closing perspective</div>
+      <h2>Conclusion</h2>
+      <p>SurgOmni establishes a unified benchmark for all-in-one surgical restoration by combining <strong>multi-degradation paired training</strong> with <strong>authentic real-world clip-level evaluation</strong>. OmniSyn supplies exact, temporally coherent supervision for single and compound degradations, while OmniBench measures performance under naturally co-occurring degradations without artificial clean targets.</p>
+      <p>The experiments show that clinically useful restoration depends on more than reconstruction accuracy: models must balance perceptual quality, temporal behavior, anatomical structure, downstream consistency, efficiency, and deployment-aware training data. SurgOmni provides the data and evaluation structure needed to study these trade-offs systematically.</p>
+      <div class="conclusion-metrics"><span><strong>44K</strong> paired frames</span><span><strong>10K</strong> real frames</span><span><strong>17</strong> restorers</span><span><strong>3</strong> downstream tasks</span></div>
+    </section>
+
+  </main>
+
+  <footer><p>&copy; 2027 SurgOmni. Project page under preparation.</p></footer>
+
+  <script>
+    (function () {
+      var placeholder = 'figure/sub.png';
+
+      document.querySelectorAll('.link-btn.is-disabled').forEach(function (link) {
+        link.addEventListener('click', function (event) { event.preventDefault(); });
+      });
+
+      document.querySelectorAll('.category-tabs').forEach(function (tabs) {
+        var panelRoot = document.getElementById(tabs.dataset.tabsFor);
+        tabs.querySelectorAll('.category-tab').forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            tabs.querySelectorAll('.category-tab').forEach(function (item) { item.classList.remove('active'); });
+            panelRoot.querySelectorAll('.category-panel').forEach(function (panel) { panel.classList.remove('active'); });
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tabTarget).classList.add('active');
+            requestAnimationFrame(syncComparisonMediaWidths);
+          });
+        });
+      });
+
+      function comparisonCard(label, level) {
+        var isHaze = label === 'Haze';
+        var base = 'figure/syn_haze/';
+        if (isHaze) {
+          return '<div class="level-comparison' + (level > 2 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
+            '<div class="level-label">Level ' + level + '</div>' +
+            '<div class="comparison-media comparison-media--split" data-video-pair="haze-level-' + level + '">' +
+              '<div class="comparison-pane comparison-pane--before"><video autoplay muted loop playsinline preload="metadata" src="' + base + 'level' + level + '_gt.mp4" aria-label="Haze Level ' + level + ' ground truth video"></video><span class="comparison-tag comparison-tag--before">GT</span></div>' +
+              '<div class="comparison-pane comparison-pane--after"><video autoplay muted loop playsinline preload="metadata" src="' + base + 'level' + level + '.mp4" aria-label="Haze Level ' + level + ' degraded video"></video><span class="comparison-tag comparison-tag--after">Degraded</span></div>' +
+              '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded Haze at level ' + level + '">' +
+              '<div class="comparison-handle"></div>' +
+            '</div><span class="media-status">GT left · degraded right</span></div>';
+        }
+        var before = '<img src="' + placeholder + '" alt="' + label + ' clean video placeholder" class="comparison-before">';
+        var after = '<img src="' + placeholder + '" alt="' + label + ' degraded video placeholder">';
+        var status = 'Video pending';
+        return '<div class="level-comparison' + (level > 2 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
+          '<div class="level-label">Level ' + level + '</div>' +
+          '<div class="comparison-media"' + (isHaze ? ' data-video-pair="haze-level-' + level + '"' : '') + '>' +
+            before +
+            (isHaze ? '<span class="comparison-tag comparison-tag--before">GT</span>' : '') +
+            '<div class="comparison-after">' + after + (isHaze ? '<span class="comparison-tag comparison-tag--after">Degraded</span>' : '') + '</div>' +
+            '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded ' + label + ' at level ' + level + '">' +
+            '<div class="comparison-handle"></div>' +
+          '</div><span class="media-status">' + status + '</span></div>';
+      }
+
+      function bindVideoPairs(root) {
+        root.querySelectorAll('[data-video-pair]').forEach(function (media) {
+          var videos = media.querySelectorAll('video');
+          if (videos.length < 2 || media.dataset.bound === 'true') return;
+          media.dataset.bound = 'true';
+          var gt = videos[0];
+          var degraded = videos[1];
+          gt.addEventListener('timeupdate', function () {
+            if (Math.abs(gt.currentTime - degraded.currentTime) > 0.12) degraded.currentTime = gt.currentTime;
+          });
+          gt.addEventListener('loadedmetadata', function () {
+            gt.currentTime = 0;
+            degraded.currentTime = 0;
+            [degraded, gt].forEach(function (video) {
+              var play = video.play();
+              if (play && play.catch) play.catch(function () {});
+            });
+          });
+        });
+      }
+
+      function renderSynPanel(panel, label) {
+        var labels = panel.dataset.synConfigs.split('|');
+        panel.innerHTML = '<div class="syn-selector"><label>Configuration <select aria-label="Choose a degradation configuration">' +
+          labels.map(function (item) { return '<option' + (item === label ? ' selected' : '') + '>' + item + '</option>'; }).join('') +
+          '</select></label></div>' +
+          '<article class="syn-config-row"><div class="syn-config-label"><small>Selected configuration</small><strong>' + label + '</strong></div><div class="syn-level-grid">' +
+          [1,2,3,4].map(function (level) { return comparisonCard(label, level); }).join('') +
+          '</div><button class="level-expand" type="button" aria-expanded="false"><i class="fas fa-chevron-down"></i><span>Show Levels 3–4</span></button></article>';
+        panel.querySelector('select').addEventListener('change', function (event) { renderSynPanel(panel, event.target.value); });
+        panel.querySelector('.level-expand').addEventListener('click', function (event) {
+          var button = event.currentTarget;
+          var expanded = button.getAttribute('aria-expanded') === 'true';
+          button.setAttribute('aria-expanded', String(!expanded));
+          panel.classList.toggle('show-all-levels', !expanded);
+          button.querySelector('span').textContent = expanded ? 'Show Levels 3–4' : 'Hide Levels 3–4';
+        });
+        syncComparisonMediaWidths();
+        bindVideoPairs(panel);
+      }
+
+      document.querySelectorAll('[data-syn-configs]').forEach(function (panel) {
+        renderSynPanel(panel, panel.dataset.synConfigs.split('|')[0]);
+      });
+
+      function syncComparisonMediaWidths() {
+        document.querySelectorAll('.comparison-media').forEach(function (media) {
+          media.style.setProperty('--media-width', media.clientWidth + 'px');
+        });
+      }
+      syncComparisonMediaWidths();
+      window.addEventListener('resize', syncComparisonMediaWidths);
+
+      bindVideoPairs(document);
+
+      document.querySelectorAll('[data-bench-configs]').forEach(function (panel) {
+        panel.innerHTML = panel.dataset.benchConfigs.split('|').map(function (label) {
+          return '<article class="bench-video-card"><div class="bench-media"><img src="' + placeholder + '" alt="' + label + ' test video placeholder"><span><i class="fas fa-play"></i> video pending</span></div><strong>' + label + '</strong></article>';
+        }).join('');
+      });
+
+      document.addEventListener('input', function (event) {
+        if (!event.target.matches('.comparison-media input[type="range"]')) return;
+        event.target.closest('.level-comparison').style.setProperty('--slider-pos', event.target.value + '%');
+      });
+
+      var reveals = document.querySelectorAll('.scroll-reveal');
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { if (entry.isIntersecting) entry.target.classList.add('revealed'); });
+      }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
+      reveals.forEach(function (element) { observer.observe(element); });
+    })();
+  </script>
+</body>
+</html>
