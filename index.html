@@ -44,7 +44,7 @@
       <p class="tldr"><strong>TL;DR:</strong> SurgOmni is a unified benchmark for all-in-one surgical image restoration, featuring 44,000 paired training frames and 10,000 real-world evaluation frames with complex multi-degradations. Evaluations reveal limitations of generic IQA metrics and provide practical guidance for surgical image restoration. </p>
       <p>Laparoscopic surgery relies on clear visualization for accurate decision-making, yet surgical videos are often degraded by smoke, fog, fluid, uneven illumination, and motion blur—often co-occurring in real procedures. To tackle the lack of paired supervision and the limitations of synthetic or pseudo-paired datasets, we introduce <strong>SurgOmni</strong>, a unified benchmark for all-in-one surgical image restoration under complex multi-degradation settings. It comprises <strong>OmniSyn</strong>, a degradation-aware paired training set with 44,000 high-resolution frames across 5 degradation types and 9 multi-degradation combinations, and <strong>OmniBench</strong>, a real-world evaluation benchmark with 10,000 frames spanning 6 surgical types, 10 organs, and 27 scenes with naturally co-occurring degradations. Extensive evaluations and surgeon assessments reveal inconsistencies among generic IQA metrics, validate OmniSyn’s effectiveness, and provide practical guidance for algorithm development and clinical dataset design.</p>
       <div class="teaser">
-        <img src="figure/Surgomni_p1.png" alt="SurgOmni Teaser" class="teaser-img" style="width:100%;max-width:1300px;">
+        <img src="figure/Surgomni_p1.png?v=2" alt="SurgOmni Teaser" class="teaser-img" width="2600" height="1588" fetchpriority="high" decoding="async" style="width:100%;max-width:1300px;">
       </div>
     </section>
 
@@ -63,7 +63,7 @@
         </header>
         <div class="dialog-body">
           <figure class="paper-figure">
-            <img src="figure/pdf_p5-000.png" alt="OmniSyn degradation synthesis pipeline">
+            <img src="figure/pdf_p5-000.png" alt="OmniSyn degradation synthesis pipeline" loading="lazy" decoding="async">
             <figcaption>OmniSyn pipeline: scene-, lens-, exposure-, and illumination-space mechanisms create five surgical degradations while preserving clip-level temporal continuity.</figcaption>
           </figure>
 
@@ -155,8 +155,8 @@
         <div class="experiment-number">E1</div>
         <div class="experiment-copy"><span class="section-kicker">Training dataset comparison</span><h3>OmniSyn transfers better under matched budgets</h3><p>Against pseudo-paired SurgClean at 2,488 pairs, OmniSyn wins 126 of 135 real-world NR-IQA comparisons. Against exactly paired LVQ at 10,000 pairs, OmniSyn wins all 135 comparisons. Exact correspondence matters, but surgical-specific synthesis remains essential beyond exact pairing.</p></div>
         <div class="experiment-visual-stack">
-          <figure class="paper-figure experiment-figure"><img src="figure/dataset_comparison.png" alt="Matched-budget dataset comparison"><figcaption>Matched-budget training dataset comparison across restoration methods.</figcaption></figure>
-          <figure class="paper-figure experiment-figure"><img src="figure/surgeon_assessment.png" alt="Blinded surgeon assessment"><figcaption>Blinded surgeon assessment of clinical visibility, structural preservation, temporal consistency, and overall interpretability.</figcaption></figure>
+          <figure class="paper-figure experiment-figure"><img src="figure/dataset_comparison.png" alt="Matched-budget dataset comparison" loading="lazy" decoding="async"><figcaption>Matched-budget training dataset comparison across restoration methods.</figcaption></figure>
+          <figure class="paper-figure experiment-figure"><img src="figure/surgeon_assessment.png" alt="Blinded surgeon assessment" loading="lazy" decoding="async"><figcaption>Blinded surgeon assessment of clinical visibility, structural preservation, temporal consistency, and overall interpretability.</figcaption></figure>
         </div>
       </article>
 
@@ -189,13 +189,13 @@
             </tbody>
           </table>
         </div>
-        <figure class="paper-figure experiment-figure experiment-figure--full"><img src="figure/pdf_p7-003.png" alt="Qualitative restoration comparison on OmniBench"><figcaption>Representative OmniBench restoration results. Red boxes highlight challenging degraded regions and local structural differences.</figcaption></figure>
+        <figure class="paper-figure experiment-figure experiment-figure--full"><img src="figure/pdf_p7-003.png" alt="Qualitative restoration comparison on OmniBench" loading="lazy" decoding="async"><figcaption>Representative OmniBench restoration results. Red boxes highlight challenging degraded regions and local structural differences.</figcaption></figure>
       </article>
 
       <article class="experiment-block experiment-block--pink">
         <div class="experiment-number">E2.2</div>
         <div class="experiment-copy"><span class="section-kicker">Downstream surgical perception</span><h3>Better-looking images are not always structurally safer</h3><p>Most evaluated restorers improve mean prediction consistency over degraded inputs. However, perceptual preference and downstream consistency diverge: a model can lead perceptual IQA while improving only part of the downstream measures.</p></div>
-        <figure class="paper-figure experiment-figure"><img src="figure/matched_source_downstream.png" alt="Downstream task comparison across restoration training sources"><figcaption>Scene segmentation, instrument segmentation, and monocular depth respond differently to training-source quality.</figcaption></figure>
+        <figure class="paper-figure experiment-figure"><img src="figure/matched_source_downstream.png" alt="Downstream task comparison across restoration training sources" loading="lazy" decoding="async"><figcaption>Scene segmentation, instrument segmentation, and monocular depth respond differently to training-source quality.</figcaption></figure>
 
         <h4 class="table-title">Downstream consistency on the OmniSyn test set (paper Table 3)</h4>
         <div class="table-scroll table-scroll--wide">
@@ -226,7 +226,7 @@
       <article class="experiment-block experiment-block--lavender">
         <div class="experiment-number">E3</div>
         <div class="experiment-copy"><span class="section-kicker">Training split study</span><h3>Composition should follow deployment conditions</h3><p><strong>single</strong> and <strong>mixed</strong> each use 160 clips, while <strong>scale</strong> combines both into 320 clips. Scale performs best overall on diverse Gallbladder and Colon domains. Under a fixed budget, mixed is advantageous on the narrower SurgClean domain because it concentrates smoke, haze, and splash exposure.</p></div>
-        <figure class="paper-figure experiment-figure"><img src="figure/training_split.png" alt="Training split comparison across real-world datasets"><figcaption>Training-split comparison across 17 methods: single (circles), mixed (triangles), and scale (diamonds).</figcaption></figure>
+        <figure class="paper-figure experiment-figure"><img src="figure/training_split.png" alt="Training split comparison across real-world datasets" loading="lazy" decoding="async"><figcaption>Training-split comparison across 17 methods: single (circles), mixed (triangles), and scale (diamonds).</figcaption></figure>
       </article>
     </section>
 
@@ -267,7 +267,9 @@
             tabs.querySelectorAll('.category-tab').forEach(function (item) { item.classList.remove('active'); });
             panelRoot.querySelectorAll('.category-panel').forEach(function (panel) { panel.classList.remove('active'); });
             tab.classList.add('active');
-            document.getElementById(tab.dataset.tabTarget).classList.add('active');
+            var targetPanel = document.getElementById(tab.dataset.tabTarget);
+            targetPanel.classList.add('active');
+            loadVisibleVideos(targetPanel);
             requestAnimationFrame(syncComparisonMediaWidths);
           });
         });
@@ -303,8 +305,8 @@
         return '<div class="level-comparison' + (index > 1 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
           '<div class="level-label">' + item.name + '</div>' +
           '<div class="comparison-media comparison-media--split" data-video-pair="' + pairId + '">' +
-            '<div class="comparison-pane comparison-pane--before"><video autoplay muted loop playsinline preload="metadata" src="' + item.base + '_gt.mp4" aria-label="' + label + ' ' + item.name + ' ground truth video"></video><span class="comparison-tag comparison-tag--before">GT</span></div>' +
-            '<div class="comparison-pane comparison-pane--after"><video autoplay muted loop playsinline preload="metadata" src="' + item.base + '.mp4" aria-label="' + label + ' ' + item.name + ' degraded video"></video><span class="comparison-tag comparison-tag--after">Degraded</span></div>' +
+            '<div class="comparison-pane comparison-pane--before"><video muted loop playsinline preload="none" data-src="' + item.base + '_gt.mp4" aria-label="' + label + ' ' + item.name + ' ground truth video"></video><span class="comparison-tag comparison-tag--before">GT</span></div>' +
+            '<div class="comparison-pane comparison-pane--after"><video muted loop playsinline preload="none" data-src="' + item.base + '.mp4" aria-label="' + label + ' ' + item.name + ' degraded video"></video><span class="comparison-tag comparison-tag--after">Degraded</span></div>' +
             '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded ' + label + ' ' + item.name + '">' +
             '<div class="comparison-handle"></div>' +
           '</div><span class="media-status">GT left · degraded right</span></div>';
@@ -331,6 +333,20 @@
         });
       }
 
+      function loadVisibleVideos(root) {
+        root.querySelectorAll('video[data-src]').forEach(function (video) {
+          var extra = video.closest('.level-comparison--extra');
+          if (extra && !root.classList.contains('show-all-levels')) return;
+          video.src = video.dataset.src;
+          video.removeAttribute('data-src');
+          video.load();
+          if (!video.closest('[data-video-pair]')) {
+            var play = video.play();
+            if (play && play.catch) play.catch(function () {});
+          }
+        });
+      }
+
       function renderSynPanel(panel, label) {
         var labels = panel.dataset.synConfigs.split('|');
         var items = synMedia[label] || [];
@@ -352,9 +368,11 @@
           button.setAttribute('aria-expanded', String(!expanded));
           panel.classList.toggle('show-all-levels', !expanded);
           button.querySelector('span').textContent = expanded ? 'Show ' + extraCount + ' more' : 'Hide additional comparisons';
+          if (!expanded) loadVisibleVideos(panel);
         });
         syncComparisonMediaWidths();
         bindVideoPairs(panel);
+        if (panel.classList.contains('active')) loadVisibleVideos(panel);
       }
 
       document.querySelectorAll('[data-syn-configs]').forEach(function (panel) {
@@ -374,11 +392,12 @@
       document.querySelectorAll('[data-bench-configs]').forEach(function (panel) {
         panel.innerHTML = panel.dataset.benchConfigs.split('|').map(function (label) {
           var source = benchMedia[label];
-          var media = source ? '<div class="bench-media"><video autoplay muted loop playsinline preload="metadata" src="' + source + '" aria-label="' + label + ' authentic test clip"></video><span>Authentic clip</span></div>' :
+          var media = source ? '<div class="bench-media"><video muted loop playsinline preload="none" data-src="' + source + '" aria-label="' + label + ' authentic test clip"></video><span>Authentic clip</span></div>' :
             '<div class="bench-media bench-media--missing" aria-label="' + label + ' source video not provided"><span class="missing-video-mark" aria-hidden="true">▶</span><span>Source video not provided</span></div>';
           return '<article class="bench-video-card">' + media + '<strong>' + label + '</strong></article>';
         }).join('');
       });
+      document.querySelectorAll('#omnibench-panels .category-panel.active').forEach(loadVisibleVideos);
 
       document.addEventListener('input', function (event) {
         if (!event.target.matches('.comparison-media input[type="range"]')) return;
