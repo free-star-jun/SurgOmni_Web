@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SURGOMNI: TOWARDS ALL-IN-ONE SURGICAL RESTORATION FOR COMPLEX MULTI-DEGRADATION</title>
   <link rel="icon" href="fig/icon.png" type="image/png">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -83,8 +83,8 @@
           </div>
 
           <div class="explorer-heading">
-            <div><span class="section-kicker">Video area</span><h3>Clean ↔ degraded comparison by severity</h3></div>
-            <p>Choose one configuration at a time. The first two levels stay compact; expand the row to inspect Levels 3–4.</p>
+            <div><span class="section-kicker">Video area</span><h3>Clean ↔ degraded comparisons</h3></div>
+            <p>Choose one configuration at a time. The first two comparisons stay compact; expand the row when additional examples are available.</p>
           </div>
           <div class="category-tabs" data-tabs-for="omnisyn-panels" role="tablist" aria-label="OmniSyn composition">
             <button type="button" class="category-tab active" data-tab-target="syn-single">Single <small>5 types</small></button>
@@ -273,24 +273,41 @@
         });
       });
 
-      function comparisonCard(label, level) {
-        var isHaze = label === 'Haze';
-        var base = 'figure/syn_haze/';
-        if (isHaze) {
-          return '<div class="level-comparison' + (level > 2 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
-            '<div class="level-label">Level ' + level + '</div>' +
-            '<div class="comparison-media comparison-media--split" data-video-pair="haze-level-' + level + '">' +
-              '<div class="comparison-pane comparison-pane--before"><video autoplay muted loop playsinline preload="metadata" src="' + base + 'level' + level + '_gt.mp4" aria-label="Haze Level ' + level + ' ground truth video"></video><span class="comparison-tag comparison-tag--before">GT</span></div>' +
-              '<div class="comparison-pane comparison-pane--after"><video autoplay muted loop playsinline preload="metadata" src="' + base + 'level' + level + '.mp4" aria-label="Haze Level ' + level + ' degraded video"></video><span class="comparison-tag comparison-tag--after">Degraded</span></div>' +
-              '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded Haze at level ' + level + '">' +
-              '<div class="comparison-handle"></div>' +
-            '</div><span class="media-status">GT left · degraded right</span></div>';
-        }
-        return '<div class="level-comparison' + (level > 2 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
-          '<div class="level-label">Level ' + level + '</div>' +
-          '<div class="comparison-media comparison-media--missing" aria-label="' + label + ' Level ' + level + ' source video not provided">' +
-            '<span class="missing-video-mark" aria-hidden="true">▶</span><strong>Source video not provided</strong>' +
-          '</div><span class="media-status">Waiting for clean and degraded MP4 files</span></div>';
+      var synMedia = {
+        'Blur': ['level1|Level 1', 'level2|Level 2', 'level3|Level 3', 'level4|Level 4'].map(function (item) { return mediaItem('Single/Blur', item); }),
+        'Haze': ['level1|Level 1', 'level2|Level 2', 'level3|Level 3', 'level4|Level 4'].map(function (item) { return mediaItem('Single/Haze', item); }),
+        'NUI': ['low|Low', 'high|High'].map(function (item) { return mediaItem('Single/NUI', item); }),
+        'Smoke': ['ambient|Ambient', 'diffusion|Diffusion', 'entangled|Entangled'].map(function (item) { return mediaItem('Single/Smoke', item); }),
+        'Splash': ['level1|Level 1', 'level2|Level 2', 'level3|Level 3'].map(function (item) { return mediaItem('Single/Splash', item); }),
+        'Blur+Haze': ['01|Example 1', '02|Example 2'].map(function (item) { return mediaItem('Dual/Blur_Haze', item); }),
+        'Blur+Smoke': ['01|Example 1', '02|Example 2', '03|Example 3'].map(function (item) { return mediaItem('Dual/Blur_Smoke', item); }),
+        'Haze+NUI': ['01|Example 1', '02|Example 2'].map(function (item) { return mediaItem('Dual/Haze_NUI', item); }),
+        'Smoke+NUI': ['01|Example 1', '02|Example 2'].map(function (item) { return mediaItem('Dual/Smoke_NUI', item); })
+      };
+
+      var benchMedia = {
+        'Blur': 'figure/OmniBench/Blur/0001.mp4',
+        'Haze': 'figure/OmniBench/Haze/0001.mp4',
+        'NUI': 'figure/OmniBench/NUI/0001.mp4',
+        'Smoke': 'figure/OmniBench/Smoke/0001.mp4',
+        'Splash': 'figure/OmniBench/Splash/0001.mp4'
+      };
+
+      function mediaItem(folder, value) {
+        var parts = value.split('|');
+        return { name: parts[1], base: 'figure/OmniSyn/' + folder + '/' + parts[0] };
+      }
+
+      function comparisonCard(label, item, index) {
+        var pairId = (label + '-' + item.name).replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+        return '<div class="level-comparison' + (index > 1 ? ' level-comparison--extra' : '') + '" style="--slider-pos:50%">' +
+          '<div class="level-label">' + item.name + '</div>' +
+          '<div class="comparison-media comparison-media--split" data-video-pair="' + pairId + '">' +
+            '<div class="comparison-pane comparison-pane--before"><video autoplay muted loop playsinline preload="metadata" src="' + item.base + '_gt.mp4" aria-label="' + label + ' ' + item.name + ' ground truth video"></video><span class="comparison-tag comparison-tag--before">GT</span></div>' +
+            '<div class="comparison-pane comparison-pane--after"><video autoplay muted loop playsinline preload="metadata" src="' + item.base + '.mp4" aria-label="' + label + ' ' + item.name + ' degraded video"></video><span class="comparison-tag comparison-tag--after">Degraded</span></div>' +
+            '<input type="range" min="0" max="100" value="50" aria-label="Compare clean and degraded ' + label + ' ' + item.name + '">' +
+            '<div class="comparison-handle"></div>' +
+          '</div><span class="media-status">GT left · degraded right</span></div>';
       }
 
       function bindVideoPairs(root) {
@@ -316,20 +333,25 @@
 
       function renderSynPanel(panel, label) {
         var labels = panel.dataset.synConfigs.split('|');
+        var items = synMedia[label] || [];
+        var extraCount = Math.max(0, items.length - 2);
+        var cards = items.length ? items.map(function (item, index) { return comparisonCard(label, item, index); }).join('') :
+          '<div class="syn-empty-state"><span class="missing-video-mark" aria-hidden="true">▶</span><strong>Source videos not provided</strong><small>This configuration will appear here after its paired MP4 files are added.</small></div>';
+        var expandButton = extraCount ? '<button class="level-expand" type="button" aria-expanded="false"><i class="fas fa-chevron-down"></i><span>Show ' + extraCount + ' more</span></button>' : '';
         panel.classList.remove('show-all-levels');
         panel.innerHTML = '<div class="syn-selector"><label>Configuration <select aria-label="Choose a degradation configuration">' +
           labels.map(function (item) { return '<option' + (item === label ? ' selected' : '') + '>' + item + '</option>'; }).join('') +
           '</select></label></div>' +
-          '<article class="syn-config-row"><div class="syn-config-label"><small>Selected configuration</small><strong>' + label + '</strong></div><div class="syn-level-grid">' +
-          [1,2,3,4].map(function (level) { return comparisonCard(label, level); }).join('') +
-          '</div><button class="level-expand" type="button" aria-expanded="false"><i class="fas fa-chevron-down"></i><span>Show Levels 3–4</span></button></article>';
+          '<article class="syn-config-row"><div class="syn-config-label"><small>Selected configuration</small><strong>' + label + '</strong></div><div class="syn-level-grid" style="--expanded-columns:' + Math.min(Math.max(items.length, 1), 4) + '">' + cards +
+          '</div>' + expandButton + '</article>';
         panel.querySelector('select').addEventListener('change', function (event) { renderSynPanel(panel, event.target.value); });
-        panel.querySelector('.level-expand').addEventListener('click', function (event) {
+        var expand = panel.querySelector('.level-expand');
+        if (expand) expand.addEventListener('click', function (event) {
           var button = event.currentTarget;
           var expanded = button.getAttribute('aria-expanded') === 'true';
           button.setAttribute('aria-expanded', String(!expanded));
           panel.classList.toggle('show-all-levels', !expanded);
-          button.querySelector('span').textContent = expanded ? 'Show Levels 3–4' : 'Hide Levels 3–4';
+          button.querySelector('span').textContent = expanded ? 'Show ' + extraCount + ' more' : 'Hide additional comparisons';
         });
         syncComparisonMediaWidths();
         bindVideoPairs(panel);
@@ -351,7 +373,10 @@
 
       document.querySelectorAll('[data-bench-configs]').forEach(function (panel) {
         panel.innerHTML = panel.dataset.benchConfigs.split('|').map(function (label) {
-          return '<article class="bench-video-card"><div class="bench-media bench-media--missing" aria-label="' + label + ' source video not provided"><span class="missing-video-mark" aria-hidden="true">▶</span><span>Source video not provided</span></div><strong>' + label + '</strong></article>';
+          var source = benchMedia[label];
+          var media = source ? '<div class="bench-media"><video autoplay muted loop playsinline preload="metadata" src="' + source + '" aria-label="' + label + ' authentic test clip"></video><span>Authentic clip</span></div>' :
+            '<div class="bench-media bench-media--missing" aria-label="' + label + ' source video not provided"><span class="missing-video-mark" aria-hidden="true">▶</span><span>Source video not provided</span></div>';
+          return '<article class="bench-video-card">' + media + '<strong>' + label + '</strong></article>';
         }).join('');
       });
 
