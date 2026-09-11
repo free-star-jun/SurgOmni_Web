@@ -324,46 +324,57 @@
           media.dataset.bound = 'true';
           var gt = videos[0];
           var degraded = videos[1];
-          var ready = { gt: false, degraded: false };
-          var started = false;
           function startWhenReady() {
-            if (started || !ready.gt || !ready.degraded) return;
-            started = true;
-            gt.currentTime = 0;
-            degraded.currentTime = 0;
-            [degraded, gt].forEach(function (video) {
-              var play = video.play();
-              if (play && play.catch) play.catch(function () {});
-            });
+            // A paused video may retain only its current frame. Calling play()
+            // resumes buffering; waiting for canplay here can leave it paused forever.
+            if (!isVideoActive(gt) || gt.readyState < 2 || degraded.readyState < 2) return;
+            [degraded, gt].forEach(playVideo);
           }
-          gt.addEventListener('canplay', function () { ready.gt = true; startWhenReady(); });
-          degraded.addEventListener('canplay', function () { ready.degraded = true; startWhenReady(); });
+          // Reuse this entry point when returning to an already loaded category.
+          media.resumePlayback = startWhenReady;
+          gt.addEventListener('loadeddata', startWhenReady);
+          degraded.addEventListener('loadeddata', startWhenReady);
+          gt.addEventListener('canplay', startWhenReady);
+          degraded.addEventListener('canplay', startWhenReady);
           gt.addEventListener('timeupdate', function () {
             // Avoid seeking on every small decode delay; frequent seeks cause visible stutter.
-            if (ready.gt && ready.degraded && !gt.paused && !degraded.paused && Math.abs(gt.currentTime - degraded.currentTime) > 0.35) {
+            if (gt.readyState >= 3 && degraded.readyState >= 3 && !gt.seeking && !degraded.seeking && !gt.paused && !degraded.paused && Math.abs(gt.currentTime - degraded.currentTime) > 0.35) {
               degraded.currentTime = gt.currentTime;
             }
           });
         });
       }
 
+      function isVideoActive(video) {
+        var panel = video.closest('.category-panel');
+        if (!panel || !panel.classList.contains('active')) return false;
+        return !video.closest('.syn-config-row--extra') || panel.classList.contains('show-all-categories');
+      }
+
+      function playVideo(video) {
+        if (!video.paused) return;
+        var play = video.play();
+        if (play && play.catch) play.catch(function () {});
+      }
+
       function pauseInactiveVideos(root) {
-        root.querySelectorAll('.category-panel:not(.active) video').forEach(function (video) {
-          video.pause();
+        root.querySelectorAll('video').forEach(function (video) {
+          if (!isVideoActive(video)) video.pause();
         });
       }
 
       function loadVisibleVideos(root) {
-        root.querySelectorAll('video[data-src]').forEach(function (video) {
-          var extra = video.closest('.syn-config-row--extra');
-          if (extra && !root.classList.contains('show-all-categories')) return;
-          video.src = video.dataset.src;
-          video.removeAttribute('data-src');
-          video.load();
-          if (!video.closest('[data-video-pair]')) {
-            var play = video.play();
-            if (play && play.catch) play.catch(function () {});
+        root.querySelectorAll('video').forEach(function (video) {
+          if (!isVideoActive(video)) return;
+          if (video.dataset.src) {
+            video.src = video.dataset.src;
+            video.removeAttribute('data-src');
+            video.load();
           }
+          if (!video.closest('[data-video-pair]')) playVideo(video);
+        });
+        root.querySelectorAll('[data-video-pair]').forEach(function (media) {
+          if (media.resumePlayback) media.resumePlayback();
         });
       }
 
@@ -386,6 +397,7 @@
           button.setAttribute('aria-expanded', String(!expanded));
           panel.classList.toggle('show-all-categories', !expanded);
           button.querySelector('span').textContent = expanded ? 'Show more degradation categories' : 'Hide more degradation categories';
+          pauseInactiveVideos(panel);
           if (!expanded) {
             loadVisibleVideos(panel);
             requestAnimationFrame(syncComparisonMediaWidths);
