@@ -305,6 +305,12 @@
         return { name: parts[1], base: prefix + parts[0], gt: prefix + (parts[2] || parts[0] + '_gt') + '.mp4' };
       }
 
+      function synLabelMarkup(label) {
+        return label === 'Smoke+Haze+NUI' || label === 'Smoke+Haze+Splash'
+          ? '<strong>Smoke+Haze<br><span>+' + (label.endsWith('NUI') ? 'NUI' : 'Splash') + '</span></strong>'
+          : '<strong>' + label + '</strong>';
+      }
+
       function comparisonCard(label, item, index) {
         var pairId = (label + '-' + item.name).replace(/[^a-z0-9]+/gi, '-').toLowerCase();
         return '<div class="level-comparison" style="--slider-pos:50%">' +
@@ -384,7 +390,8 @@
           var items = synMedia[label] || [];
           var cards = items.length ? items.map(function (item, index) { return comparisonCard(label, item, index); }).join('') :
             '<div class="syn-empty-state"><span class="missing-video-mark" aria-hidden="true">▶</span><strong>Videos pending</strong></div>';
-          return '<article class="syn-config-row' + (rowIndex > 1 ? ' syn-config-row--extra' : '') + '"><div class="syn-config-label"><strong>' + label + '</strong></div><div class="syn-level-grid" style="--level-columns:' + Math.min(Math.max(items.length, 1), 4) + '">' + cards + '</div></article>';
+          var wrapped = label === 'Smoke+Haze+NUI' || label === 'Smoke+Haze+Splash' ? ' syn-config-label--wrapped' : '';
+          return '<article class="syn-config-row' + (rowIndex > 1 ? ' syn-config-row--extra' : '') + '"><div class="syn-config-label' + wrapped + '">' + synLabelMarkup(label) + '</div><div class="syn-level-grid" style="--level-columns:' + Math.min(Math.max(items.length, 1), 4) + '">' + cards + '</div></article>';
         }).join('');
         var extraCount = Math.max(0, labels.length - 2);
         var expandButton = extraCount ? '<button class="category-expand" type="button" aria-expanded="false"><i class="fas fa-chevron-down"></i><span>Show more degradation categories</span></button>' : '';
@@ -425,9 +432,10 @@
       document.querySelectorAll('[data-bench-configs]').forEach(function (panel) {
         panel.innerHTML = panel.dataset.benchConfigs.split('|').map(function (label) {
           var source = benchMedia[label];
+          var displayLabel = label.replace(/ · \d+$/, '');
           var media = source ? '<div class="bench-media"><video muted loop playsinline preload="none" data-src="' + source + '" aria-label="' + label + ' authentic test clip"></video></div>' :
             '<div class="bench-media bench-media--missing" aria-label="' + label + ' source video not provided"><span class="missing-video-mark" aria-hidden="true">▶</span><span>Source video not provided</span></div>';
-          return '<article class="bench-video-card">' + media + '<strong>' + label + '</strong></article>';
+          return '<article class="bench-video-card">' + media + '<strong>' + displayLabel + '</strong></article>';
         }).join('');
       });
       document.querySelectorAll('#omnibench-panels .category-panel.active').forEach(loadVisibleVideos);
